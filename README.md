@@ -8,9 +8,9 @@ This notebook shows the workflow for building, training, and testing a custom mo
 Project Overview: Images are cleaned, information is visualized and analysis is run.
 
 The images are first cleaned, duplicate checking is performed using the ImageHash package. \
-A transformer is initialized. Which performs various types of data augmentation.
-Pytorch Custom Data set classes are then implemented.
-Pytorch Ignite is used for model training and to create model checkpoints.
-The model implemented is a custom neural network classifier.
-The model is tested against a subset of the original data.
+A transformer is initialized. Which performs various types of data augmentation. \
+Pytorch Custom Data set classes are then implemented. \
+Pytorch Ignite is used for model training and to create model checkpoints. \
+The model implemented is a custom neural network classifier. \
+The model is tested against a subset of the original data. \
 The model is then tested on completely unseen data.
