@@ -13,5 +13,5 @@ The second file: \
 `dataloader_classes.py` <-- Loads and transforms all images into tensors, matching the labels, loads dependencies.
 It first checks to see if the folders, train val and test are present. And if they are, it proceeds.
 
-The third file:\ 
+The third file: \ 
 `model_architecture.py` loads the Pytorch CNN.
