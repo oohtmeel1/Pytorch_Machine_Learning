@@ -1,7 +1,7 @@
 So what this script is intended to do:
 
 
-The first file:
+The first file: \
 `loading_data_c_.py` <-- Creates labels from existing images of dogs and cats specifically and saves them to csv files in the current working directory. 
 Please be careful and dont load random junk.
 Takes a few arguments:
