@@ -1,5 +1,6 @@
 # Pytorch_Machine_Learning
 Machine Learning project using Python and Pytorch for binary Classification of images.
+Contains both a notebook and a folder with Python Scripts for performing the below tasks.
 
 
 This notebook shows the workflow for building, training, and testing a custom model class using Pytorch for Machine learning. The specific purpose is Binary Classification of images. This notebook covers up to the end of the training portion. Training is implemented using Pytorch Ignite.
@@ -13,4 +14,4 @@ Pytorch Custom Data set classes are then implemented. \
 Pytorch Ignite is used for model training and to create model checkpoints. \
 The model implemented is a custom neural network classifier. \
 The model is tested against a subset of the original data. \
-The model is then tested on completely unseen data.
+The model is then tested on completely unseen data(out of sample data).
