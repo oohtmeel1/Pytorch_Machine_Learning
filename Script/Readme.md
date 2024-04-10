@@ -1,5 +1,8 @@
+
 So what this set of scripts is intended to do:
 Read current working directory for train, val, test files, make labels, and load pytorch model to perform analysis.
+
+
 
 The first file: \
 `loading_data_c_.py` <-- Creates labels from existing images of dogs and cats specifically and saves them to csv files in the current working directory. 
