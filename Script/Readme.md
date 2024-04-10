@@ -27,5 +27,8 @@ The third file:
 The Fourth file:
 
 `run_experiment.py` Runs the model, training it on data in the train directory and validating it on the val directory.
+It creates a new folder called checkpoint where well performing models are saved.
 
+The Fifth file:
+`testing_data.py` Simply tests all of the models saved in the Checkpoint folder.
 
