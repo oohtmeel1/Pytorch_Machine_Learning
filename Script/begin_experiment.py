@@ -196,8 +196,9 @@ def main():
             metric_names="all",
             global_step_transform=global_step_from_engine(trainer),
         )
-
-    trainer.run(train_dataloader, max_epochs=5)
+        
+    epxn_ = int(input('Please enter how many epochs you would like to train ',))
+    trainer.run(train_dataloader, max_epochs= epxn_)
         
     
 # --------------------------------------------------
