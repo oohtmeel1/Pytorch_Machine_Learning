@@ -16,3 +16,9 @@ It first checks to see if the folders, train val and test are present. And if th
 The third file: 
 
 `model_architecture.py` loads the Pytorch CNN.
+
+The Fourth file:
+
+`run_experiment.py` Runs the model, training it on data in the train directory and validating it on the val directory.
+
+
