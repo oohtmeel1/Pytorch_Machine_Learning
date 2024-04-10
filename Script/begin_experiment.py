@@ -16,6 +16,10 @@ from ignite.metrics import Precision, Recall
 from ignite.handlers import ModelCheckpoint
 from ignite.engine import Engine, Events, create_supervised_trainer, create_supervised_evaluator  
 from ignite.metrics import Accuracy, Loss
+from ignite.handlers import Timer, BasicTimeProfiler, HandlersTimeProfiler    
+from ignite.engine import Events
+import warnings
+warnings.filterwarnings('ignore')
 
 class Args(NamedTuple):
     """ Command-line arguments """
@@ -49,9 +53,13 @@ def main():
     def dataloading(loader, batch_size, shuffle_):
         x = DataLoader(loader, batch_size = batch_size, shuffle = shuffle_)
         return x
-    dataloader_train = dataloading(train, 16, True)
-    dataloader_val = dataloading(val, 16, True)
-    dataloader_test = dataloading(test, 16, True) 
+    
+    train_length= pd.read_csv('training_labels_final.csv')
+    q = len(train_length)//100
+    print(q)
+    train_dataloader = dataloading(train, q, True)
+    val_dataloader = dataloading(val, 16, True)
+    
         
         
     loss_fn_ = input('Please enter a loss function ending in (), else nn.BCEWithLogitsLoss() will be used',)
@@ -72,10 +80,10 @@ def main():
         optimizer = (f"torch.optim{optimizer}(model.parameters(), lr = {x_})")
     print(loss_fn_)
     print(optimizer) 
-    
+     
     def update_model(engine, batch):
         model.train()
-        data,label = batch[0],batch[1]
+        data,label = batch
         optimizer.zero_grad()
         data=data.to(device)
         label=label.to(device)
@@ -89,8 +97,14 @@ def main():
         return loss.item()
 
     trainer = Engine(update_model)
+ 
 
-    
+    val_metrics = {
+        "accuracy": Accuracy(),
+        "loss": Loss(loss_fn_)
+    }
+
+
     def validation_step(engine, batch):
         model.eval()
         with torch.no_grad():
@@ -103,22 +117,25 @@ def main():
             outputs=outputs.round()
             y=y.cpu().detach()
 
-        return outputs, y.float()
-    
-    
+        return outputs.float(), y.float()
+        
+        
     evaluator = Engine(validation_step)
-    
+
+
 
 
     precision = Precision()
+
+
     Accuracy().attach(evaluator, "accuracy")
     Precision().attach(evaluator,'precision')
     Recall(average='weighted').attach(evaluator,'recall')
-    
-    
-    f_ = int(input('How often do you want to print output? (How many iterations should finish)', ))
-    
-    @trainer.on(Events.ITERATION_COMPLETED(every=f_))
+
+
+        
+
+    @trainer.on(Events.ITERATION_COMPLETED(every=50))
     def log_training(engine):
         batch_loss = engine.state.output
         lr = optimizer.param_groups[0]['lr']
@@ -127,12 +144,18 @@ def main():
         i = engine.state.iteration
         print("Epoch {}/{} : {} - batch loss: {}, lr: {}".format(e, n, i, batch_loss, lr))
         
-    validate_every = int(input("Please enter how often to validate", ))
+        
+        
+        
+        
+
+
+    validate_every = 5
 
 
     @trainer.on(Events.EPOCH_COMPLETED(every=validate_every))
     def run_validation():
-        evaluator.run(dataloader_val)
+        evaluator.run(val_dataloader)
         
     @trainer.on(Events.EPOCH_COMPLETED(every=validate_every))
     def log_validation():
@@ -140,21 +163,19 @@ def main():
         metrics = evaluator.state.metrics
         print(f"Epoch: {trainer.state.epoch},  Accuracy: {metrics['accuracy']},  Precision: {metrics['precision']}, recall: {metrics['recall']}")
 
+
     def score_function(engine):
         return engine.state.metrics["accuracy"]
-    
-    
-    
-    f_ = input('How many checkpoint models would you like to save?', )
+
+
     model_checkpoint = ModelCheckpoint(
         "checkpoint",
-        n_saved=f_,
+        n_saved=25,
         filename_prefix="best",
         score_function=score_function,
         score_name="accuracy",
         global_step_transform=global_step_from_engine(trainer),
-    )   
-    
+    )
     
     evaluator.add_event_handler(Events.COMPLETED, model_checkpoint, {"model": model})
 
@@ -175,18 +196,8 @@ def main():
             metric_names="all",
             global_step_transform=global_step_from_engine(trainer),
         )
-        
-    f_ = int(input('How many epochs do you want to run?', ))
-    
-    trainer.run(dataloader_train, max_epochs=f_)
-    
-     
 
-        
-
-    
-          
-    
+    trainer.run(train_dataloader, max_epochs=5)
         
     
 # --------------------------------------------------
