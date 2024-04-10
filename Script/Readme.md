@@ -1,3 +1,7 @@
+The data can be downloaded from Kaggle
+
+https://www.kaggle.com/datasets/agnesmcfarlin/cleaned-microsoft-dataset
+
 
 So what this set of scripts is intended to do:
 Read current working directory for train, val, test files, make labels, and load pytorch model to perform analysis.
