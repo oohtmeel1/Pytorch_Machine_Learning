@@ -27,8 +27,10 @@ would you like to proceed? (yes or no)""",)
 if i == 'yes':
     pass
 else:
-    SystemExit
     print('exiting now')
+    quit()
+   
+   
 # --------------------------------------------------
 img_transforms = v2.Compose([v2.Resize((64, 64)),
                              v2.RandomHorizontalFlip(p=0.5),

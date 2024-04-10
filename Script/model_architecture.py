@@ -55,4 +55,5 @@ class Modelo(nn.Module):
         x = self.fc6(x)
         return x
 
-model=Modelo()
+
+
